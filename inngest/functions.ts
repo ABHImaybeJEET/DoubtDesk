@@ -8,18 +8,16 @@ import { emailNotificationLimiter } from "../lib/ratelimit";
 import { sendReplyNotificationEmail } from "../lib/email";
 
 export const helloWorld = inngest.createFunction(
-    { id: "hello-world" },                       
-    { event: "test/hello.world" },               
-    async ({ event, step }: { event: any, step: any }) => { 
+    { id: "hello-world", triggers: [{ event: "test/hello.world" }] },
+    async ({ event, step }) => {
         await step.sleep("wait-a-moment", "1s");
         return { message: `Hello ${(event.data as any).email}!` };
     },
 );
 
 export const cleanupTempAssets = inngest.createFunction(
-    { id: "cleanup-temp-assets" },                
-    { cron: "0 * * * *" },                        
-    async ({ step }: { step: any }) => {          
+    { id: "cleanup-temp-assets", triggers: [{ cron: "0 * * * *" }] },
+    async ({ step }) => {
         const deletedFiles = await step.run("delete-old-files", async () => {
             const tempDir = path.resolve("./public/temp-assets");
             const videosDir = path.resolve("./public/videos");
@@ -51,9 +49,8 @@ export const cleanupTempAssets = inngest.createFunction(
 );
 
 export const sendReplyNotification = inngest.createFunction(
-    { id: "send-reply-notification" },           
-    { event: "reply.created" },                   
-    async ({ event, step }: { event: any, step: any }) => { 
+    { id: "send-reply-notification", triggers: [{ event: "reply.created" }] },
+    async ({ event, step }) => {
         const { doubtId, replyId, replierName, replierEmail, replyContent } = event.data;
 
         // 1. Fetch parent doubt and original author details
