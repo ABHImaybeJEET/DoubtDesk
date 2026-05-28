@@ -85,7 +85,6 @@ export async function DELETE(req: Request, { params }: { params: Promise<{ id: s
             }
         }
 
-
         const isOwner = email && reply.userEmail === email;
         if (!isOwner && !isTeacher) {
             return NextResponse.json({ error: "Forbidden: not allowed to delete this reply" }, { status: 403 });
