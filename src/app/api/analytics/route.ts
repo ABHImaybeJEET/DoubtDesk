@@ -240,7 +240,7 @@ export async function GET(req: Request) {
             recentAIReplies: recentAIReplies || []
         });
 
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error('Error fetching analytics:', error);
         return NextResponse.json({
             trendingDoubts: [],
